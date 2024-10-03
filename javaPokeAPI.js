@@ -121,27 +121,8 @@ async function fetchPokeJson() {
 }
 
 */
-/*
-function toggleDisplay(element) {
-    const allInfos = element.parentNode.querySelectorAll('.pokemon-info');
-    const headers = element.parentNode.parentNode.querySelector('thead tr').children; // Zugriff auf alle Th-Elemente
-    // Alle Elemente ausblenden und Header-Hintergrund entfernen
-    allInfos.forEach((cell, index) => {
-        cell.style.display = 'none';
-        headers[index].style.backgroundColor = ''; // Hintergrund entfernen
-    });
-    // Angeklicktes Element einblenden und Header-Hintergrund setzen
-    element.style.display = element.style.display === 'none' ? '' : 'none';
-    if (element.style.display === '') {
-        const idx = Array.from(allInfos).indexOf(element); // Index des aktuellen Elements finden
-        headers[idx].style.backgroundColor = 'grey'; // Hintergrund des entsprechenden Headers setzen
-    }
-}
-    und im css th.active-header {
-    background-color: grey;
-}
-    */
 
+/* Detailierte Card
 async function fetchPokeJson() {
     const url = "https://pokeapi.co/api/v2/pokemon?limit=5&offset=2";
     const response = await fetch(url);
@@ -302,5 +283,113 @@ async function fetchPokeJson() {
     }
     
 }
+*/
 
+async function fetchPokeJson() {
+    const url = "https://pokeapi.co/api/v2/pokemon?limit=5&offset=2";
+    const response = await fetch(url);
+    const responseAsJson = await response.json();
+    const container = document.getElementById('pokemon-container');
+
+ // Erstellen eines Promises für jeden Detailaufruf und zusätzliche Abfrage der Species-Informationen
+    const detailPromises = responseAsJson.results.map(async pokemon => {
+        const detailsResponse = await fetch(pokemon.url);
+        const detailsJson = await detailsResponse.json();
+        const speciesResponse = await fetch(detailsJson.species.url);
+        const speciesJson = await speciesResponse.json();
+        return { detailsJson, speciesJson };
+    });
+
+    // Warten auf alle Promises, bevor mit der Verarbeitung fortgefahren wird
+    const detailsResults = await Promise.all(detailPromises);
+    // Sortieren der Ergebnisse nach Pokémon-ID
+    detailsResults.sort((a, b) => a.detailsJson.id - b.detailsJson.id);
+   
+    container.addEventListener('click', function(event) {
+        // Überprüfe, ob das geklickte Element der Container selbst ist oder nicht
+        if (event.target === container) {
+            // Setze alle Karten zurück, entferne die 'active-card' Klasse
+            document.querySelectorAll('.pokemon-card').forEach(c => {
+                c.classList.remove('active-card');
+                c.classList.remove('inactive-card');
+                c.style.opacity = '1.0';
+            });
+        }
+    });
+
+    // Iteration über jedes Pokémon, jetzt sortiert nach ID
+    detailsResults.forEach(({ detailsJson, speciesJson }) => {
+        
+        const card = document.createElement('div');
+        card.className = 'pokemon-card';
+        card.addEventListener('click', function(event) {
+            event.stopPropagation();
+            if (!this.classList.contains('active-card') && !this.classList.contains('inactive-card')) {
+                // Deaktiviere alle anderen Karten
+                document.querySelectorAll('.pokemon-card').forEach(c => {
+                    c.classList.remove('active-card');
+                    c.classList.add('inactive-card');
+                    c.style.opacity = '0.5';
+                });
+                // Aktiviere diese Karte
+                this.classList.add('active-card');
+                this.classList.remove('inactive-card');
+                this.style.opacity = '1.0';
+            } else if (this.classList.contains('inactive-card')) {
+                // Setze alle Karten zurück
+                document.querySelectorAll('.pokemon-card').forEach(c => {
+                    c.classList.remove('active-card');
+                    c.classList.remove('inactive-card');
+                    c.style.opacity = '1.0';
+                });
+            }
+            // Wenn die Karte bereits die Klasse 'active-card' hat, passiert nichts
+        });
+
+        const type = detailsJson.types[0].type.name; // Zugriff auf den primären Typ
+        switch (type) {
+            case 'grass':
+                card.classList.add('bc_green');
+                break;
+            case 'fire':
+                card.classList.add('bc_red');
+                break;
+            case 'water':
+                card.classList.add('bc_blue');
+                break;
+        }
+        
+        // ID des Pokémon oben rechts auf der Karte
+        const idSpan = document.createElement('span');
+        idSpan.textContent = `# ${detailsJson.id}`;
+        idSpan.className = 'pokemon-id';  // CSS-Klasse für Styling
+        card.appendChild(idSpan);
+
+        // Name des Pokémon als Überschrift über das Bild
+        const nameHeader = document.createElement('h3');
+        nameHeader.textContent = detailsJson.name.charAt(0).toUpperCase() + detailsJson.name.slice(1).toLowerCase();
+        card.appendChild(nameHeader);
+
+        // Typen des Pokémon
+        const typeContainer = document.createElement('div');
+        typeContainer.className = 'pokemon-types';
+        detailsJson.types.forEach(type => {
+            const typeSpan = document.createElement('span');
+            typeSpan.textContent = type.type.name;
+            typeSpan.className = 'type-badge';  // CSS-Klasse für Styling
+            typeContainer.appendChild(typeSpan);
+        });
+        card.appendChild(typeContainer);
+
+        // Bild des Pokémon
+        const image = document.createElement('img');
+        image.src = detailsJson.sprites.front_default;
+        image.style.width = "70%"; // Bild nimmt die Hälfte der Karte ein
+        image.style.marginTop = "-16px";
+        image.style.marginBottom = "-16px";
+        card.appendChild(image);
+
+        container.appendChild(card);    
+    });    
+}
 

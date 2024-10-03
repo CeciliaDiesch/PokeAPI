@@ -18,6 +18,7 @@
             text-align: center;
         }
         .pokemon-card{
+            width: 17%;
             border: 1px solid #242323;
             display: inline-block;
             margin: 10px;
@@ -26,6 +27,22 @@
             background-color: greenyellow;
             text-align: center;
             position: relative;
+        }
+
+        .pokemon-card.active-card {
+            position: fixed; /* Fixiert das Element relativ zum Viewport */
+            top: 50%; /* Setzt die obere Kante in die Mitte des Bildschirms */
+            left: 50%; /* Setzt die linke Kante in die Mitte des Bildschirms */
+            transform: translate(-50%, -50%); /* Verschiebt das Element zurück um seine halbe Breite und Höhe, um es genau zu zentrieren */
+            z-index: 100; /* Stellt sicher, dass es über anderen Inhalten liegt */
+            transition: transform 0.3s, opacity 0.3s; /* Glatte Animationen für die Transformation und die Transparenz */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Schatten für bessere Sichtbarkeit */
+            width: 30%;
+        }
+
+        .pokemon-card.inactive-card {
+            opacity: 0.5; /* Macht inaktive Karten transparenter */
+            transition: opacity 0.3s; /* Glatte Änderung der Transparenz */
         }
 
         .pokemon-id {
