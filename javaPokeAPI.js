@@ -320,10 +320,11 @@ async function fetchPokeJson() {
     });
 
     // Iteration über jedes Pokémon, jetzt sortiert nach ID
-    detailsResults.forEach(({ detailsJson, speciesJson }) => {
+    detailsResults.forEach(({ detailsJson, speciesJson }, index) => {
         
         const card = document.createElement('div');
         card.className = 'pokemon-card';
+
         card.addEventListener('click', function(event) {
             event.stopPropagation();
             if (!this.classList.contains('active-card') && !this.classList.contains('inactive-card')) {
@@ -341,6 +342,7 @@ async function fetchPokeJson() {
                 this.querySelectorAll('.pokemon-info')[0].style.display = 'block'; // Zeigt nur das erste Panel (About)
                 this.querySelector('table').style.display = 'flex'; // Zeigt die Tabelle an
                 this.style.opacity = '1.0';
+            
             } else if (this.classList.contains('inactive-card')) {
                 // Setze alle Karten zurück
                 document.querySelectorAll('.pokemon-card').forEach(c => {
@@ -352,7 +354,12 @@ async function fetchPokeJson() {
                 });
             }
             // Wenn die Karte bereits die Klasse 'active-card' hat, passiert nichts
+
         });
+        addNavigationArrows(card, index, detailsResults.length); 
+ 
+
+ 
 
         const type = detailsJson.types[0].type.name; // Zugriff auf den primären Typ
         switch (type) {
@@ -495,6 +502,53 @@ async function fetchPokeJson() {
         // Angeklicktes Element einblenden oder ausblenden
         element.style.display = element.style.display === 'none' ? '' : 'none';
     }
+
+    function addNavigationArrows(card, index, total) {
+        const leftArrow = document.createElement('div');
+        leftArrow.className = 'arrow left';
+        leftArrow.innerHTML = '&#9664;'; // Unicode für linken Pfeil
+        leftArrow.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigate(index - 1, total);
+        });
+    
+        const rightArrow = document.createElement('div');
+        rightArrow.className = 'arrow right';
+        rightArrow.innerHTML = '&#9654;'; // Unicode für rechten Pfeil
+        rightArrow.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navigate(index + 1, total);
+        });
+    
+        card.appendChild(leftArrow);
+        card.appendChild(rightArrow);
+    }
+    
+    function navigate(newIndex, total) {
+        const cards = document.querySelectorAll('.pokemon-card');
+        const index = Math.max(0, Math.min(newIndex, total - 1)); // Sicherstellen, dass der Index gültig ist
+    
+        // Simuliere ein Klick-Event auf der Karte an der neuen Index-Position
+        activateCard(index);
+    }
+    
+    function activateCard(index) {
+        const cards = document.querySelectorAll('.pokemon-card');
+        cards.forEach((card, i) => {
+            card.classList.remove('active-card', 'inactive-card');
+            card.querySelectorAll('.pokemon-info').forEach(info => info.style.display = 'none');
+            card.querySelector('table').style.display = 'none';
+            card.style.opacity = '0.5';
+        });
+    
+        const activeCard = cards[index];
+        activeCard.classList.add('active-card');
+        activeCard.querySelectorAll('.pokemon-info')[0].style.display = 'block'; // Zeigt nur das erste Panel (About)
+        activeCard.querySelector('table').style.display = 'flex'; // Zeigt die Tabelle an
+        activeCard.style.opacity = '1.0';
+    }
         
+
+   
 }
 

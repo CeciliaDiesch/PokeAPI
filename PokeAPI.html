@@ -46,6 +46,9 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Schatten für bessere Sichtbarkeit */
             width: 30%;
         }
+        .pokemon-card.active-card .arrow {
+            display: block; /* Zeige Pfeile nur, wenn die Karte aktiv ist */
+        }
 
         .pokemon-card.inactive-card {
             cursor: default;
@@ -162,6 +165,7 @@
         }
 
         .arrow {
+            display: none;
             cursor: pointer;
             position: absolute;
             top: 50%;
