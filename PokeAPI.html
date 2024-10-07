@@ -7,6 +7,11 @@
     <script src="./javaPokeAPI.js"></script>
 
     <style>
+        body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
         .card{
             border: 1px solid #242323;
             display: inline-block;
@@ -27,9 +32,11 @@
             background-color: greenyellow;
             text-align: center;
             position: relative;
+            cursor: pointer;
         }
 
         .pokemon-card.active-card {
+            cursor: default;
             position: fixed; /* Fixiert das Element relativ zum Viewport */
             top: 50%; /* Setzt die obere Kante in die Mitte des Bildschirms */
             left: 50%; /* Setzt die linke Kante in die Mitte des Bildschirms */
@@ -41,6 +48,7 @@
         }
 
         .pokemon-card.inactive-card {
+            cursor: default;
             opacity: 0.5; /* Macht inaktive Karten transparenter */
             transition: opacity 0.3s; /* Glatte Änderung der Transparenz */
         }
@@ -61,7 +69,7 @@
         }
 
         .pokemon-info{
-
+            display: none;
             background-color: #f9f9f9;
             display: flex;
             flex-direction: column;
@@ -85,6 +93,7 @@
         }
 
         th {
+            cursor: pointer;
             padding-right: 8px;
             max-width: 80px !important;
         }
@@ -103,6 +112,8 @@
         }
 
         table{
+            display: flex;
+            justify-content: space-around;
             background-color: #f9f9f9;
             width: 100%;
             border-top-left-radius: 10px;
@@ -127,16 +138,47 @@
         }
 
         .bc_green{
-            background-color: rgb(101, 196, 92);
+            background-color: rgb(111, 216, 113);
         }
         
         .bc_red{
-            background-color: rgb(223, 81, 81);
+            background-color: rgb(198, 110, 214);
         }
         
         .bc_blue{
-            background-color: rgb(81, 127, 212);
+            background-color: rgba(95, 186, 228, 0.723);
         }
+               
+        .bc_orange{
+            background-color: rgb(230, 115, 115);
+        }
+                
+        .bc_yellow{
+            background-color: rgb(236, 206, 125);
+        }
+
+        .bc_beige{
+            background-color: rgb(189, 189, 189);
+        }
+
+        .arrow {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: white;
+            user-select: none;
+        }
+
+        .arrow.left {
+            left: 10px;
+        }
+
+        .arrow.right {
+            right: 10px;
+        }        
+
 
 
     </style>
