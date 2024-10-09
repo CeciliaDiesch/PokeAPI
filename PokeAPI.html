@@ -12,16 +12,7 @@
             flex-direction: column;
             align-items: center;
         }
-        .card{
-            border: 1px solid #242323;
-            display: inline-block;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            width: 200px;
-            text-align: center;
-        }
+
         .pokemon-card{
             width: 17%;
             border: 1px solid #242323;
@@ -42,7 +33,7 @@
             left: 50%; /* Setzt die linke Kante in die Mitte des Bildschirms */
             transform: translate(-50%, -50%); /* Verschiebt das Element zurück um seine halbe Breite und Höhe, um es genau zu zentrieren */
             z-index: 100; /* Stellt sicher, dass es über anderen Inhalten liegt */
-            transition: transform 0.3s, opacity 0.3s; /* Glatte Animationen für die Transformation und die Transparenz */
+            
             box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Schatten für bessere Sichtbarkeit */
             width: 30%;
         }
@@ -72,7 +63,7 @@
         }
 
         .pokemon-info{
-            display: none;
+
             background-color: #f9f9f9;
             display: flex;
             flex-direction: column;
@@ -168,8 +159,8 @@
             display: none;
             cursor: pointer;
             position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
+            top: 30%;
+
             font-size: 24px;
             color: white;
             user-select: none;
