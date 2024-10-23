@@ -6,11 +6,11 @@
     <title>PokeAPI</title>
     <link rel="icon" type="image/png" href="img/Logo.png" />
     <link rel="stylesheet" href="style.css" />
-    <script src="./javaPokeAPI.js"></script>
+
   </head>
   <body onload="fetchPokeJson()">
     <header class="site-header">
-      <img src="/img/Logo.png" alt="Pokémon Logo" class="logo" />
+      <img src="./img/Logo.png" alt="Pokémon Logo" class="logo" />
       <h1>Pokémon</h1>
       <form action="/suche" class="search-form" id="search-form">
         <input
@@ -24,7 +24,9 @@
     </header>
 
     <div id="pokemon-container" class="container"></div>
-    <button id="load-more" class="buttonMore">Mehr Pokémon laden</button>
+    <button id="load-more" class="button-more">Mehr Pokémon laden</button>
     <div id="loading-screen" style="display: none">Lädt...</div>
+
+    <script src="./javaPokeAPI.js"></script>
   </body>
 </html>

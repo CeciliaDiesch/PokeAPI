@@ -59,12 +59,12 @@ body {
 .container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: stretch;
     margin: 20px;
     gap: 10px;
     width: 100%;
-    min-height: 100vh;
+    min-height: 70vh;
     align-content: flex-start;
 }
 
@@ -199,7 +199,7 @@ table {
     height: 100%;
 }
 
-.buttonMore {
+.button-more {
     margin: 16px;
     padding: 10px 20px;
     font-size: 16px;
@@ -289,30 +289,6 @@ table {
     }
 }
 
-@media (max-width: 560px) {
-    .site-header {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .search-form {
-        width: 100%;
-        margin-top: 10px;
-    }
-
-    .search-form input[type="text"],
-    .search-form button {
-        width: 100%;
-    }
-}
-
-@media (min-width: 1921px) {
-    body {
-        max-width: 1920px;
-        margin: auto;
-    }
-}
-
 @media (max-width: 370px) {
     .pokemon-card {
         flex: 1 1 10px;
@@ -328,33 +304,55 @@ table {
     }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 560px) {
+    .site-header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .search-form {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .search-form input[type="text"],
+    .search-form button {
+        width: 100%;
+    }
+
     .pokemon-card.active-card {
-        width: 60%;
+        width: 75% !important;
+        max-width: 75% !important;
+    }
+    
+    .pokemon-card.active-card h3{
+        font-size: 28px;
     }
 }
 
-@media (max-width: 500px) {
+@media (min-width: 551px) and (max-width: 1000px) {
     .pokemon-card.active-card {
-        min-width: 80%;
+        width: 50% !important;
+        max-width: 50% !important;
+        font-size: 14px;
+    }
+
+    .pokemon-card.active-card h3{
+        font-size: 32px;
     }
 }
 
-@media (min-width: 351px) and (max-width: 800px) {
-    .pokemon-card {
-        flex: 1 1 351px;
-        flex-basis: calc(27% - 20px);
+@media (min-width: 1001px) and (max-width: 1920px) {
+    .pokemon-card.active-card {
+        width: 30% !important;
+        max-width: 30% !important;
+        font-size: 14px;
     }
-}
 
-@media (min-width: 801px) and (max-width: 1000px) {
-    .pokemon-card {
-        flex: 1 1 801px;
-        flex-basis: calc(29% - 20px);
+    .pokemon-card.active-card h3{
+        font-size: 32px;
     }
-}
 
-@media (min-width: 1000px) {
     .pokemon-card {
         flex: 1 1 1001px;
         flex-basis: calc(20% - 20px);
@@ -366,5 +364,28 @@ table {
         flex-wrap: wrap;
         align-content: flex-start;
         justify-content: center;
+    }
+}
+
+@media (min-width: 351px) and (max-width: 500px) {
+    .pokemon-card {
+        flex: 1 1 351px;
+        flex-basis: calc(27% - 20px);
+        max-width: 150px;
+    }
+}
+
+@media (min-width: 501px) and (max-width: 1000px) {
+    .pokemon-card {
+        flex: 1 1 501px;
+        flex-basis: calc(29% - 20px);
+        max-width: 150px;
+    }
+}
+
+@media (min-width: 1921px) {
+    body {
+        max-width: 1920px;
+        margin: auto;
     }
 }
