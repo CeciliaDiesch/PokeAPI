@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PokeAPI</title>
-    <link rel="icon" type="image/png" href="img/Logo.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="img/Logo.png" />
+    <link rel="stylesheet" href="style.css" />
     <script src="./javaPokeAPI.js"></script>
-</head>
-<body onload="fetchPokeJson()">
-
+  </head>
+  <body onload="fetchPokeJson()">
     <header class="site-header">
-        <img src="/img/Logo.png" alt="Pokémon Logo" class="logo">
-        <h1>Pokémon</h1>
-        <form action="/suche" class="search-form" id="search-form">
-            <input type="text" placeholder="Pokémon suchen..." id="search-input" name="search">
-            <button type="submit">Suchen</button>
-        </form>
+      <img src="/img/Logo.png" alt="Pokémon Logo" class="logo" />
+      <h1>Pokémon</h1>
+      <form action="/suche" class="search-form" id="search-form">
+        <input
+          type="text"
+          placeholder="Pokémon suchen..."
+          id="search-input"
+          name="search"
+        />
+        <button type="submit">Suchen</button>
+      </form>
     </header>
-    
+
     <div id="pokemon-container" class="container"></div>
     <button id="load-more" class="buttonMore">Mehr Pokémon laden</button>
-    <div id="loading-screen" style="display:none;">Lädt...</div>
-    
-</body>
+    <div id="loading-screen" style="display: none">Lädt...</div>
+  </body>
 </html>
