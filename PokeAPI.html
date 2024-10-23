@@ -4,183 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PokeAPI</title>
+    <link rel="icon" type="image/png" href="img/Logo.png">
+    <link rel="stylesheet" href="style.css">
     <script src="./javaPokeAPI.js"></script>
-
-    <style>
-        body{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .pokemon-card{
-            width: 17%;
-            border: 1px solid #242323;
-            display: inline-block;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 8px;
-            background-color: greenyellow;
-            text-align: center;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .pokemon-card.active-card {
-            cursor: default;
-            position: fixed; /* Fixiert das Element relativ zum Viewport */
-            top: 50%; /* Setzt die obere Kante in die Mitte des Bildschirms */
-            left: 50%; /* Setzt die linke Kante in die Mitte des Bildschirms */
-            transform: translate(-50%, -50%); /* Verschiebt das Element zurück um seine halbe Breite und Höhe, um es genau zu zentrieren */
-            z-index: 100; /* Stellt sicher, dass es über anderen Inhalten liegt */
-            
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5); /* Schatten für bessere Sichtbarkeit */
-            width: 30%;
-        }
-        .pokemon-card.active-card .arrow {
-            display: block; /* Zeige Pfeile nur, wenn die Karte aktiv ist */
-        }
-
-        .pokemon-card.inactive-card {
-            cursor: default;
-            opacity: 0.5; /* Macht inaktive Karten transparenter */
-            transition: opacity 0.3s; /* Glatte Änderung der Transparenz */
-        }
-
-        .pokemon-id {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-weight: bold;
-            color: white;
-        }
-        .container{
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            align-items: flex-start;
-            margin: 20px;
-        }
-
-        .pokemon-info{
-
-            background-color: #f9f9f9;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            padding-left: 16px;
-            padding-right: 20px;
-            padding-bottom: 20px;
-            padding-top: 0;
-            text-align: left;
-            width: auto;
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
-        }
-
-        .pokemon-info table{
-            border-bottom-right-radius: 10px;
-        }
-
-        .pokemon-info td {
-            padding: 4px;
-        }
-
-        th {
-            cursor: pointer;
-            padding-right: 8px;
-            max-width: 80px !important;
-        }
-
-        .active-tab {
-            background-color: rgb(223, 223, 223); /* Graue Hintergrundfarbe für aktive Tabs */
-            text-decoration: underline; /* Unterstreichen zur Hervorhebung */
-        }   
-        .active-header {
-            color: black; /* Dunkle Schriftfarbe für bessere Lesbarkeit */
-            text-decoration: underline;
-        }
-
-        .inactive-header {
-            color: grey; /* Graue Schriftfarbe für inaktive Header */
-        }
-
-        table{
-            display: flex;
-            justify-content: space-around;
-            background-color: #f9f9f9;
-            width: 100%;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-            padding: 16px;
-        }
-
-        .pokemon-types {
-            margin-top: 5px;
-            margin-bottom: 10px;
-        }
-
-        .type-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            margin: 2px;
-            background-color: #dedede;
-            border-radius: 10px;
-            color: #333;
-            font-weight: bold;
-            text-transform: capitalize;
-        }
-
-        .bc_green{
-            background-color: rgb(111, 216, 113);
-        }
-        
-        .bc_red{
-            background-color: rgb(198, 110, 214);
-        }
-        
-        .bc_blue{
-            background-color: rgba(95, 186, 228, 0.723);
-        }
-               
-        .bc_orange{
-            background-color: rgb(230, 115, 115);
-        }
-                
-        .bc_yellow{
-            background-color: rgb(236, 206, 125);
-        }
-
-        .bc_beige{
-            background-color: rgb(189, 189, 189);
-        }
-
-        .arrow {
-            display: none;
-            cursor: pointer;
-            position: absolute;
-            top: 30%;
-
-            font-size: 24px;
-            color: white;
-            user-select: none;
-        }
-
-        .arrow.left {
-            left: 10px;
-        }
-
-        .arrow.right {
-            right: 10px;
-        }        
-
-
-
-    </style>
 </head>
 <body onload="fetchPokeJson()">
-    <h1>Pokémon Karten</h1>
+
+    <header class="site-header">
+        <img src="/img/Logo.png" alt="Pokémon Logo" class="logo">
+        <h1>Pokémon</h1>
+        <form action="/suche" class="search-form" id="search-form">
+            <input type="text" placeholder="Pokémon suchen..." id="search-input" name="search">
+            <button type="submit">Suchen</button>
+        </form>
+    </header>
+    
     <div id="pokemon-container" class="container"></div>
+    <button id="load-more" class="buttonMore">Mehr Pokémon laden</button>
+    <div id="loading-screen" style="display:none;">Lädt...</div>
     
 </body>
 </html>
