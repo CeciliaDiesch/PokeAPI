@@ -1,3 +1,5 @@
+let currentOffset = 0;
+
 document.getElementById('search-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const searchString = document.getElementById('search-input').value.trim().toLowerCase();
@@ -6,37 +8,43 @@ document.getElementById('search-form').addEventListener('submit', function(e) {
     container.innerHTML = '';
     if (searchString.length >= 3) {
         fetchPokeJsonSearch(searchString);
-        buttonMore.style.display = 'none'; 
-        container.style.alignItems = 'flex-start';
+        buttonMore.style.display = 'none'; container.style.alignItems = 'flex-start';
     } else if (searchString.length === 0) {
+        currentOffset = 0;
         fetchPokeJson();
-        buttonMore.style.display = 'block';
-        container.style.alignItems = 'stretch';
+        buttonMore.style.display = 'block'; container.style.alignItems = 'stretch';
     } else alert('Bitte geben Sie mindestens drei Buchstaben ein.');
 });
 
 async function fetchPokeJsonSearch(searchString) {
+    displayLoadingScreen(true);
     const url = `https://pokeapi.co/api/v2/pokemon?limit=1000`;
     const response = await fetch(url);
     const responseAsJson = await response.json();
     const filteredResults = responseAsJson.results.filter(pokemon => pokemon.name.includes(searchString)).slice(0, 10);
-    const detailsResults = await fetchDetails(filteredResults);
     const container = document.getElementById('pokemon-container');
     initializeContainerClick(container);
-    detailsResults.forEach((pokemonData, index) => createPokemonCard(pokemonData, index, detailsResults.length, container));
+    if (filteredResults.length === 0) {
+        container.innerHTML = '<p>Leider gab es keinen Treffer für Ihre Suche.</p>';
+    } else {
+        const detailsResults = await fetchDetails(filteredResults);
+        detailsResults.forEach((pokemonData, index) => createPokemonCard(pokemonData, index, detailsResults.length, container));
+    }
+    displayLoadingScreen(false);
 }
 
-let currentOffset = 0;
-
 async function fetchPokeJson() {
-    const url = "https://pokeapi.co/api/v2/pokemon?limit=36&offset=0";
+    displayLoadingScreen(true);
+    const limit = 36;
+    const url = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${currentOffset}`;
     const response = await fetch(url);
     const responseAsJson = await response.json();
     const detailsResults = await fetchDetails(responseAsJson.results);
     const container = document.getElementById('pokemon-container');
     initializeContainerClick(container);
     detailsResults.forEach((pokemonData, index) => createPokemonCard(pokemonData, index, detailsResults.length, container));
-    currentOffset += 24;
+    currentOffset += limit;
+    displayLoadingScreen(false);
 }
 
 async function fetchDetails(results) {
@@ -81,8 +89,8 @@ function createPokemonCard({ detailsJson, speciesJson }, index, total, container
     container.appendChild(card); 
 }
 
-function configureCard(card, detailsJson, speciesJson, index, total) {
-    addNavigationArrows(card, index, total);
+function configureCard(card, detailsJson, speciesJson) {
+    addNavigationArrows(card, detailsJson.id);
     addCardTypeColor(card, detailsJson);
     addCardID(card, detailsJson.id);
     addCardName(card, detailsJson.name);
@@ -109,12 +117,12 @@ function setupCardClick(card) {
 function addCardTypeColor(card, detailsJson) {
     const type = detailsJson.types[0].type.name;
     const typeClassMap = {
-        'grass': 'bc_green',
-        'fire': 'bc_orange',
-        'water': 'bc_blue',
-        'bug': 'bc_yellow',
-        'poison': 'bc_red',
-        'normal': 'bc_beige'
+        'grass': 'bc_green', 'fire': 'bc_orange', 'water': 'bc_blue',
+        'bug': 'bc_yellow', 'poison': 'bc_red', 'normal': 'bc_beige',
+        'electric': 'bc_lightgreen', 'ice': 'bc_cyan', 'fighting': 'bc_purple',
+        'ground': 'bc_brown', 'flying': 'bc_lightblue', 'psychic': 'bc_pink',
+        'rock': 'bc_gray', 'ghost': 'bc_darkpurple', 'dragon': 'bc_deepblue',
+        'dark': 'bc_black', 'steel': 'bc_steel', 'fairy': 'bc_lightpink'
     };
     const typeClass = typeClassMap[type] || 'bc_default';
     card.classList.add(typeClass);
@@ -170,32 +178,40 @@ function addCardTable(card) {
 function addCardPokemonCell(card, detailsJson) {
     const pokemonCell = document.createElement('div');
     pokemonCell.className = 'pokemon-info';
-    pokemonCell.innerHTML = `
-        <table>
-            <tr><td>Height:</td><td>${detailsJson.height / 10} m</td></tr>
-            <tr><td>Weight:</td><td>${detailsJson.weight / 10} kg</td></tr>
-            <tr><td>Base Exp.:</td><td>${detailsJson.base_experience}</td></tr>
-            <tr><td>Skills:</td><td>${detailsJson.abilities.map(a => a.ability.name).join(', ')}</td></tr>
-        </table>
-    `;
+    pokemonCell.innerHTML = createPokemonHTML(detailsJson);
     pokemonCell.style.display = 'none';
     card.appendChild(pokemonCell);
     return pokemonCell;
 }
 
+function createPokemonHTML(detailsJson) {
+    return `
+        <table>
+                <tr><td>Height:</td><td>${detailsJson.height / 10} m</td></tr>
+                <tr><td>Weight:</td><td>${detailsJson.weight / 10} kg</td></tr>
+                <tr><td>Base Exp.:</td><td>${detailsJson.base_experience}</td></tr>
+                <tr><td>Skills:</td><td>${detailsJson.abilities.map(a => a.ability.name).join(', ')}</td></tr>
+        </table>
+    `;   
+}
+
 function addCardBreedingCell(card, speciesJson) {
     const breedingCell = document.createElement('div');
     breedingCell.className ='pokemon-info';
-    breedingCell.innerHTML = `
-        <table>
-            <tr><td>Gender Ratio:</td><td>${speciesJson.gender_rate >= 0 ? (speciesJson.gender_rate * 12.5) + '% female' : 'Unknown'}</td></tr>
-            <tr><td>Egg Groups:</td><td>${speciesJson.egg_groups.map(group => group.name).join(', ')}</td></tr>
-            <tr><td>Egg Cycle:</td><td>${speciesJson.hatch_counter}</td></tr>
-        </table>
-    `;
+    breedingCell.innerHTML = createBreedingHTML(speciesJson);
     breedingCell.style.display = 'none';
     card.appendChild(breedingCell);
     return breedingCell;
+}
+
+function createBreedingHTML(speciesJson){
+    return `
+        <table>
+                <tr><td>Gender Ratio:</td><td>${speciesJson.gender_rate >= 0 ? (speciesJson.gender_rate * 12.5) + '% female' : 'Unknown'}</td></tr>
+                <tr><td>Egg Groups:</td><td>${speciesJson.egg_groups.map(group => group.name).join(', ')}</td></tr>
+                <tr><td>Egg Cycle:</td><td>${speciesJson.hatch_counter}</td></tr>
+        </table>
+    `;
 }
 
 function addCardAbilitiesCell(card, detailsJsonStats) {
@@ -209,7 +225,7 @@ function addCardAbilitiesCell(card, detailsJsonStats) {
 
 function createAbilitiesHTML(detailsJsonStats) {
     return `
-     <table>
+        <table>
                 <tr><td>HP:</td><td>${detailsJsonStats[0].base_stat}</td></tr>
                 <tr><td>Attack:</td><td>${detailsJsonStats[1].base_stat}</td></tr>
                 <tr><td>Defense:</td><td>${detailsJsonStats[2].base_stat}</td></tr>
@@ -217,7 +233,7 @@ function createAbilitiesHTML(detailsJsonStats) {
                 <tr><td>Sp. Def:</td><td>${detailsJsonStats[4].base_stat}</td></tr>
                 <tr><td>Speed:</td><td>${detailsJsonStats[5].base_stat}</td></tr>
                 <tr><td>Total:</td><td>${detailsJsonStats.reduce((sum, stat) => sum + stat.base_stat, 0)}</td></tr>
-            </table>
+        </table>
     `;
 }
 
@@ -242,26 +258,35 @@ function toggleDisplay(element, headers, index) {
         element.style.display = element.style.display === 'none' ? '' : 'none';
 }
 
-function addNavigationArrows(card, index, total) {
-        const leftArrow = document.createElement('div');
-        leftArrow.className = 'arrow left';
-        leftArrow.innerHTML = '&#9664;';
-        leftArrow.addEventListener('click', (e) => {
-            e.stopPropagation(); navigate(index - 1, total);
-        });    
-        const rightArrow = document.createElement('div');
-        rightArrow.className = 'arrow right';
-        rightArrow.innerHTML = '&#9654;';
-        rightArrow.addEventListener('click', (e) => {
-            e.stopPropagation(); navigate(index + 1, total);
-        });   
-        card.appendChild(leftArrow);
-        card.appendChild(rightArrow);
+function addNavigationArrows(card, detailsJsonId) {
+    const leftArrow = document.createElement('div');
+    leftArrow.className = 'arrow left';
+    leftArrow.innerHTML = '&#9664;';
+    leftArrow.addEventListener('click', (e) => { e.stopPropagation(); navigate(detailsJsonId, 'prev'); });
+    const rightArrow = document.createElement('div');
+    rightArrow.className = 'arrow right';
+    rightArrow.innerHTML = '&#9654;';
+    rightArrow.addEventListener('click', (e) => { e.stopPropagation(); navigate(detailsJsonId, 'next'); });
+    card.appendChild(leftArrow);
+    card.appendChild(rightArrow);
 }
     
-function navigate(newIndex, total) {
-        const index = Math.max(0, Math.min(newIndex, total - 1));
-        activateCard(index);
+function navigate(currentId, direction) {
+    const cards = Array.from(document.querySelectorAll('.pokemon-card'));
+    const ids = cards.map(card => parseInt(card.querySelector('.pokemon-id').textContent.slice(2).trim()));
+    const currentIndex = ids.indexOf(currentId);
+    let newIndex;
+
+    if (direction === 'next') {
+        newIndex = (currentIndex + 1) % ids.length; 
+    } else if (direction === 'prev') {
+        newIndex = currentIndex - 1;
+        if (newIndex < 0) {
+            newIndex = ids.length - 1;
+        }
+    }
+
+    activateCard(cards[newIndex]);
 }
 
 function activateCard(cardOrIndex) {
@@ -292,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function displayLoadingScreen(display) {
-    const loadingScreen = document.getElementById('loading-screen');
+    const loadingScreen = document.getElementById('loading-spinner');
     if (display) {
         loadingScreen.style.display = 'block';
     } else {

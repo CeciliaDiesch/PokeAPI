@@ -1,7 +1,10 @@
 body {
+    margin-bottom: 48px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .pokemon-card {
@@ -163,6 +166,54 @@ table {
     background-color: rgb(189, 189, 189);
 }
 
+.bc_lightgreen {
+    background-color: #A8B820;
+}
+
+.bc_cyan {
+    background-color: #98D8D8;
+}
+
+.bc_purple {
+    background-color: #A040A0;
+}
+
+.bc_brown {
+    background-color: #E0C068;
+}
+
+.bc_lightblue {
+    background-color: #A890F0;
+}
+
+.bc_pink {
+    background-color: #F85888;
+}
+
+.bc_gray {
+    background-color: #B8A038;
+}
+
+.bc_darkpurple {
+    background-color: #705898;
+}
+
+.bc_deepblue {
+    background-color: #7038F8;
+}
+
+.bc_black {
+    background-color: #705848;
+}
+
+.bc_steel {
+    background-color: #B8B8D0;
+}
+
+.bc_lightpink{
+    background-color: #EE99AC;
+}
+
 .arrow {
     display: none;
     cursor: pointer;
@@ -232,6 +283,7 @@ table {
     overflow-x: hidden;
     background-color: #4CAF50;
     color: white;
+    margin: 0;
 }
 
 .site-header .logo {
@@ -268,6 +320,20 @@ table {
     background-color: #369036;
 }
 
+.spinner {
+    border: 16px solid #f3f3f3; 
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    margin-top: 48px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 
 @media (max-width: 320px) {
     .pokemon-card {
